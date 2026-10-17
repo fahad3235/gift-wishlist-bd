@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gift Wishlist BD &#x2014; &#x989;&#x9aa;&#x9b9;&#x9be;&#x9b0; &#x989;&#x987;&#x9b6;&#x9b2;&#x9bf;&#x9b8;&#x9cd;&#x99f;</title>
+<meta name="description" content="Offline bilingual gift wishlist & gift-idea organizer for Bangladesh. Plan, budget, buy and track gifts.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">&#x1f381;</span>
+    <div>
+      <h1 data-i18n="title">Gift Wishlist BD</h1>
+      <p class="tagline" data-i18n="tagline">My gift ideas, planned, bought &amp; given &#x2014; all in one place</p>
+    </div>
+  </div>
+  <button id="langBtn" class="lang-btn" type="button">&#x9ac;&#x9be;&#x982;&#x9b2;&#x9be;</button>
+</header>
+
+<main>
+  <section class="stats" aria-label="Dashboard">
+    <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label" data-i18n="totalItems">Total items</span></div>
+    <div class="stat"><span class="stat-num" id="statPlanned">&#x9f3;0.00</span><span class="stat-label" data-i18n="plannedSpend">Planned spend</span></div>
+    <div class="stat"><span class="stat-num" id="statBought">&#x9f3;0.00</span><span class="stat-label" data-i18n="boughtSpend">Bought spend</span></div>
+    <div class="stat"><span class="stat-num" id="statGiven">0</span><span class="stat-label" data-i18n="givenCount">Given</span></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab active" data-tab="wishlist" type="button" data-i18n="tabWishlist">Wishlist</button>
+    <button class="tab" data-tab="budgets" type="button" data-i18n="tabBudgets">Budgets</button>
+    <button class="tab" data-tab="data" type="button" data-i18n="tabData">Data</button>
+  </nav>
+
+  <section class="tab-panel" id="tab-wishlist">
+    <form id="giftForm" class="form-card" novalidate>
+      <h2 id="formTitle" data-i18n="addTitle">Add a gift</h2>
+      <div id="formErrors" class="form-errors" hidden></div>
+      <div class="form-grid">
+        <label><span data-i18n="giftName">Gift name</span> <input id="fName" type="text" maxlength="100" required autocomplete="off"></label>
+        <label><span data-i18n="recipient">Recipient</span> <input id="fRecipient" type="text" maxlength="60" required autocomplete="off"></label>
+        <label><span data-i18n="occasion">Occasion</span> <select id="fOccasion"></select></label>
+        <label><span data-i18n="price">Price (BDT)</span> <input id="fPrice" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+        <label><span data-i18n="priority">Priority</span> <select id="fPriority"></select></label>
+        <label><span data-i18n="status">Status</span> <select id="fStatus"></select></label>
+        <label class="wide"><span data-i18n="link">Link (optional)</span> <input id="fLink" type="url" placeholder="https://&#x2026;" autocomplete="off"></label>
+        <label class="wide"><span data-i18n="note">Note (optional)</span> <textarea id="fNote" maxlength="300" rows="2"></textarea></label>
+      </div>
+      <div class="form-actions">
+        <button id="submitBtn" class="primary" type="submit" data-i18n="addBtn">Add gift</button>
+        <button id="cancelEditBtn" class="ghost" type="button" hidden data-i18n="cancelBtn">Cancel</button>
+      </div>
+    </form>
+
+    <div class="filters">
+      <input id="fltSearch" type="search" data-i18n-ph="search" placeholder="Search gifts, people, notes&#x2026;" aria-label="Search">
+      <label><span data-i18n="status">Status</span> <select id="fltStatus"></select></label>
+      <label><span data-i18n="occasion">Occasion</span> <select id="fltOccasion"></select></label>
+      <label><span data-i18n="priority">Priority</span> <select id="fltPriority"></select></label>
+      <label><span data-i18n="sort">Sort</span> <select id="fltSort"></select></label>
+    </div>
+
+    <div id="itemList" class="item-list"></div>
+  </section>
+
+  <section class="tab-panel" id="tab-budgets" hidden>
+    <h2 data-i18n="budgetsTitle">Occasion budgets</h2>
+    <p class="hint" data-i18n="budgetHint">Set a spending cap per occasion. Spend counts every item that is not Dropped.</p>
+    <div id="budgetList" class="budget-list"></div>
+  </section>
+
+  <section class="tab-panel" id="tab-data" hidden>
+    <h2 data-i18n="dataTitle">Your data</h2>
+    <p class="hint" data-i18n="dataHint">Everything lives in this browser (localStorage). Export a backup any time.</p>
+    <div class="data-actions">
+      <button id="exportBtn" type="button" data-i18n="exportBtn">Export JSON</button>
+      <label class="file-btn"><span data-i18n="importBtn">Import JSON</span><input id="importFile" type="file" accept="application/json,.json" hidden></label>
+      <button id="shareBtn" type="button" data-i18n="shareBtn">Copy wishlist as text</button>
+      <span id="shareMsg" class="inline-msg" role="status"></span>
+    </div>
+    <p class="hint" data-i18n="importHint">Import replaces all current data. Only files exported by this app are accepted.</p>
+    <h3 data-i18n="eraseTitle">Erase all data</h3>
+    <p class="hint" data-i18n="eraseHint">Type DELETE below to permanently erase every gift and budget.</p>
+    <div class="erase-row">
+      <input id="eraseInput" type="text" data-i18n-ph="erasePlaceholder" placeholder="Type DELETE" autocomplete="off">
+      <button id="eraseBtn" class="danger" type="button" data-i18n="eraseBtn">Erase everything</button>
+    </div>
+    <p id="dataMsg" class="inline-msg" role="status"></p>
+  </section>
+</main>
+
+<footer>
+  <p>Gift Wishlist BD &#xb7; Offline personal organizer &#xb7; No account, no network requests. Prices are your own estimates.</p>
+</footer>
+
+<script src="js/logic.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
